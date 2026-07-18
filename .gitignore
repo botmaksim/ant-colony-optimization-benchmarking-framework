@@ -1,0 +1,31 @@
+# Build directory
+build/
+out/
+bin/
+
+# Dependencies downloaded via CMake (e.g., raylib, nlohmann_json)
+_deps/
+
+# IDE and OS specific files
+.vscode/
+.idea/
+.DS_Store
+*.suo
+*.user
+CMakeCache.txt
+CMakeFiles/
+
+# common output files
+tournament_report.json
+tournament_task.json
+saved_configs.json
+
+# Object files, executables, and libraries
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
