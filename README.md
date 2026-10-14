@@ -1,60 +1,73 @@
-# Ant Colony Optimization Benchmarking Framework
+# ACO-Benchmark: Metaheuristic Optimization Framework for TSP
 
-## Overview
-A high-performance C++ benchmarking framework for Ant Colony Optimization (ACO) algorithms applied to the Traveling Salesperson Problem (TSP). This tool is designed to provide a fair, rigorous environment for evaluating different ACO variations, offering extreme flexibility through composable algorithmic blocks and comprehensive telemetry collection.
+[![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](https://en.wikipedia.org/wiki/C%2B%2B17)
+[![CMake 3.14+](https://img.shields.io/badge/CMake-3.14%2B-blue.svg)](https://cmake.org/)
+[![Algorithms](https://img.shields.io/badge/Algorithms-Ant%20Colony%20Optimization-brightgreen.svg)](#)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Features
-- **Highly Modular Architecture**: Compose custom ACO variants by mixing and matching distinct phases:
-  - **Selection Strategies**: Roulette Wheel, Pseudo-Random (ACS style), and Random Walk.
-  - **Local Search**: 2-Opt and 2.5-Opt for post-construction path refinement.
-  - **Pheromone Updates**: All Ants (AS), Elitist (EAS), Rank-Based (ASrank), and Best-Only (ACS/MMAS).
-  - **Pheromone Limits**: Unbounded or Max-Min (MMAS) boundaries to prevent premature stagnation.
-  - **Evaporation Mechanics**: Standard global evaporation and per-step local evaporation (ACS).
-- **Procedural Field Generation**: Generate uniformly distributed points or complex clustered distributions to test algorithm robustness against local optima.
-- **Fair Tournament Execution**: Time-boxed execution per algorithm, ensuring true algorithmic efficiency is measured rather than just implementation speed.
-- **JSON Telemetry**: Detailed serialization of tournament tasks and reports, including convergence histories and final optimal tours, built for integration with external analysis tools.
+A high-performance C++17 benchmarking framework for evaluating Ant Colony Optimization metaheuristics applied to the Traveling Salesperson Problem. The tool provides a rigorous environment for profiling Ant System, Ant Colony System, and Max-Min Ant System algorithms with automated statistical metric collection against standard TSPLIB benchmark instances.
 
-## Building and Running
+---
 
-### Prerequisites
-- C++20 compliant compiler
-- CMake 3.16 or higher
-- [Raylib](https://github.com/raysan5/raylib)
-- [nlohmann/json](https://github.com/nlohmann/json)
+## Table of Contents
+1. [Supported Algorithms](#supported-algorithms)
+2. [Benchmark Capabilities](#benchmark-capabilities)
+3. [Prerequisites](#prerequisites)
+4. [Build & Execution](#build--execution)
+5. [Directory Structure](#directory-structure)
+6. [License](#license)
 
-### Build Instructions
+---
+
+## Supported Algorithms
+
+* **Ant System**: Standard pheromone trail reinforcement and evaporation dynamics.
+* **Ant Colony System**: Local pheromone updating with aggressive pseudo-random proportional action choice.
+* **Max-Min Ant System**: Pheromone trail limits bounding min and max bounds to prevent premature convergence, coupled with best-so-far reinforcement.
+* **Local Search Heuristics**: Integrated 2-opt trajectory optimization improving tour convergence rates.
+
+---
+
+## Benchmark Capabilities
+
+* **TSPLIB Compatibility**: Native parser ingesting standard symmetric TSP coordinate matrix instances.
+* **Statistical Metrics**: Automated calculation of best, worst, mean tour lengths, standard deviation, and convergence iteration profiles across repeated seed runs.
+* **Extensible Architecture**: Decoupled algorithm interfaces allowing custom metaheuristic variants to be plugged in.
+
+---
+
+## Prerequisites
+
+* Compiler: GCC 9+ or Clang 10+ with C++17 support
+* Build System: CMake 3.14+
+
+---
+
+## Build & Execution
+
 ```bash
-mkdir build && cd build
-cmake ..
-cmake --build .
+git clone git@github.com:botmaksim/ant-colony-optimization-benchmarking-framework.git
+cd ant-colony-optimization-benchmarking-framework
+
+cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j$(nproc)
+
+./build/aco_benchmark
 ```
 
-### Usage
-Run the built executable to access the interactive menu:
-1. **Interactive Sandbox**: Visualize how a specific ACO configuration solves a TSP instance in real-time, step-by-step.
-2. **Tournament Runner**: Run a benchmark comparing multiple configurations across vСоздай подробный профессиональный readme без глупых картинок в папке antarious generated or imported graphs. The results are saved to `tournament_report.json`.
+---
 
-## Configuration Parameters (`ACOConfig`)
+## Directory Structure
 
-The engine's behavior is entirely driven by the `ACOConfig` structure, allowing you to create countless hybrid algorithms:
+```text
+ant-colony-optimization-benchmarking-framework/
+├── CMakeLists.txt           # Build automation configuration
+├── src/                     # Core metaheuristics, pheromone models, and solvers
+└── third_party/             # TSPLIB instance loaders and matrix utilities
+```
 
-- `ant_count`: Number of ants dispatched per iteration.
-- `alpha`: Weight of the pheromone trail ($\alpha$).
-- `beta`: Weight of the heuristic information (inverse distance, $\beta$).
-- `rho`: Global evaporation rate ($\rho$).
-- `xi`: Local evaporation rate (used when `use_local_evaporation` is enabled).
-- `q0`: Probability of making a greedy choice in Pseudo-Random selection.
-- `elitist_weight`: Additional pheromone weight applied to the global best tour in the Elitist update strategy.
-- `rank_count`: Number of top ants that deposit pheromones in the Rank-Based update strategy.
-- `tau_min` / `tau_max`: Pheromone boundaries used when Max-Min limits are enabled.
-- `candidate_list_size`: Restricts the next-node choices to the $N$ nearest neighbors to optimize large graphs (0 for a full dense graph).
+---
 
-## Project Structure
+## License
 
-- `src/core/`: Fundamental data structures, metrics, and configuration definitions.
-- `src/engine/`: The core ACO mathematical logic (`ACOSolver`), local search implementations, field generators, and tournament orchestration.
-- `src/utils/`: Serialization layer for converting between C++ memory structures and JSON representations.
-- `src/ui/`: Raylib-based interface for the sandbox visualizer and tournament runner.
-
-## Analysis and Visualization
-While this C++ framework acts as the computation engine, it is designed to work in tandem with a web-based React frontend. The engine exports `tournament_report.json` files that can be loaded into the React application to render detailed interactive graphs, convergence charts, and side-by-side metric comparisons.
+This project is open-source software licensed under the [MIT License](LICENSE).
